@@ -1,0 +1,15 @@
+{
+  "name": "features_generator_riverpod",
+  "version": "1.0.0",
+  "description": "Small script for flutter and riverpod to directly create features using the mvvm pattern",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mario mazzarelli",
+  "license": "ISC",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}
