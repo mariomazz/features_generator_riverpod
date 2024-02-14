@@ -27,3 +27,9 @@
         
         Create presentation : 
             flutter_feature generate presentation --feature_name=* --presentation_name=*
+
+
+
+    Write features into custom directory : 
+
+        Create completed

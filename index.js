@@ -1,7 +1,39 @@
 const prompt = require("prompt-sync")({ sigint: true });
 const fs = require('node:fs');
 
+Object.defineProperty(String.prototype, "ReplaceAll", {
+    value: function replaceAll(from, to) {
+        let replacedValue = JSON.parse(JSON.stringify(this));
+        while (replacedValue.includes(this)) {
+            replacedValue = replacedValue.replace(from, to);
+        }
+        return replacedValue;
+    },
+    writable: true,
+    configurable: true,
+});
+
+
 const features = [{ key: "ui", value: "presentation" }, { key: "bl", value: "application" }, { key: "data", value: "data" }];
+
+
+function init() {
+    let isGeneratingNormal = (process.argv.length >= 3 && process.argv[2].toLowerCase() == "generate") && ((process.argv.length > 3 && process.argv[3].toLowerCase() != "presentation") || (process.argv.length == 3));
+    let isGeneratingPresentation = (process.argv.length >= 3 && process.argv[2].toLowerCase() == "generate") && (process.argv.length > 3 && process.argv[3].toLowerCase() == "presentation");
+
+    if (isGeneratingNormal) {
+        startFeatureCreation();
+    } else if (isGeneratingPresentation) {
+        startFeaturePresentationCreation();
+    } else {
+        /* // default generating...
+        startFeatureCreation(); */
+        process.exit();
+    }
+}
+
+init();
+
 
 function startFeatureCreation() {
 
@@ -22,6 +54,16 @@ function startFeatureCreation() {
         let presentationOnly = !createData && !createApplication && createPresentation;
 
         let path = `${process.cwd()}/lib/src/features/${featureName}`;
+
+        let inputDir = getInputArg("dir");
+
+        if (inputDir) {
+
+            inputDir = `/${inputDir}/`
+            inputDir = inputDir.replaceAll("//", "/");
+
+            path = `${process.cwd()}${inputDir}${featureName}`
+        }
 
         console.log(`Writing feature ${featureName} ...`);
         try {
@@ -93,6 +135,16 @@ function startFeaturePresentationCreation() {
 
             let path = `${process.cwd()}/lib/src/features/${featureName}`;
 
+            let inputDir = getInputArg("dir");
+
+            if (inputDir) {
+
+                inputDir = `/${inputDir}/`
+                inputDir = inputDir.replaceAll("//", "/");
+
+                path = `${process.cwd()}${inputDir}${featureName}`
+            }
+
             console.log(`Writing presentation ${presentationName} ...`);
 
             let parsedPresentationName = "";
@@ -161,28 +213,6 @@ function writeFile(directory, filename, fileContent) {
     }
 }
 
-
-function init() {
-    let isGeneratingNormal = (process.argv.length >= 3 && process.argv[2].toLowerCase() == "generate") && (process.argv.length > 3 && process.argv[3].toLowerCase() != "presentation");
-    let isGeneratingPresentation = (process.argv.length >= 3 && process.argv[2].toLowerCase() == "generate") && (process.argv.length > 3 && process.argv[3].toLowerCase() == "presentation");
-
-    if (isGeneratingNormal) {
-        startFeatureCreation();
-    } else if (isGeneratingPresentation) {
-        startFeaturePresentationCreation();
-    } else {
-        /* // default generating...
-        startFeatureCreation(); */
-        process.exit();
-    }
-}
-
-init();
-
-
-// dart files data
-
-
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -193,11 +223,19 @@ function removeCapitalize(string) {
 
 function getInputArg(key) {
     // --{key}=value
-    return process.argv.find((arg) => {
-        return arg.includes(key);
-    }).replace(`--${key}=`, "");
+
+    let foundedArg = process.argv.find((arg) => {
+        return arg.includes(`--${key}=`);
+    })
+    if (foundedArg) {
+        return foundedArg.replace(`--${key}=`, "");
+    } else {
+        return undefined;
+    }
+
 }
 
+// dart files data
 
 function modelDartData() {
     return `
