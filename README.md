@@ -29,7 +29,25 @@
             flutter_feature generate presentation --feature_name=* --presentation_name=*
 
 
+HOW TO: 😇
 
-    Write features into custom directory : 
+    Write features into custom directory ? : 
 
-        Create completed
+        Commands: 
+
+            Create completed feature : 
+                flutter_feature generate --feature_name=* --dir=*
+        
+            Create presentation : 
+                flutter_feature generate presentation --feature_name=* --presentation_name=* --dir=*
+
+        Examples:   
+
+                Commands: 
+
+                    Create completed feature : 
+                        flutter_feature generate --feature_name=warnings --dir=lib/src/features
+        
+                    Create presentation : 
+                        flutter_feature generate presentation --feature_name=warnings --presentation_name=add_warning_button --dir=lib/src/features
+
